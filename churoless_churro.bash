@@ -15,6 +15,8 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
 set -xefaou pipefail
 
+source .env
+
 module purge
 
 set +e
@@ -26,12 +28,11 @@ module load python/3.12.10
 
 set -e
 
-cd $REPO_PATH
+cd $CHURROLESS_REPO_PATH
 
 source .venv/bin/activate
-source .env
 
-llama-server --no-ui --parallel 10 -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:Q4_K_M'} &
+llama-server --no-ui --parallel ${CHURROLESS_CONCURRENCY:-10} -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:Q4_K_M'} &
 
 sleep 80
 
