@@ -1,6 +1,8 @@
 .idea/
 .venv/
 outputs/
+examples/**/
+!examples/mini_ballard/
 
 
 
