@@ -1,0 +1,22 @@
+Transcribe the entirety of this historical document to XML format.
+
+Ensure that the transcription captures all textual elements accurately and correctly isolates lines.
+
+For the lines of text sitting below each score line, please link indicate under which score line they are sitting, \
+as there could be multiple lines of text under each score line.
+Hence, for stanzas with musical notation, the output should be of type:
+```xml
+</Paragraph>
+    <Line measure="1">J'ay trouvé deux Amans tranſis</Line>
+    <Line measure"2">Qui diſputoient ſur leurs Philis.</Line>
+</Paragraph>
+```
+And for stanzas without musical notation:
+```xml
+  <Paragraph>
+    <Line measure"-1">Eſtre reſveur &amp; ſoupirer ſans ceſſe,</Line>
+    <Line measure"-1">>N'eſt pas bien mon talent :</Line>
+    <Line measure"-1">>Et quand il faut être dans la triſteſſe,</Line>
+    <Line measure"-1">>Je ſuis mauvais galant.</Line>
+  </Paragraph>
+```

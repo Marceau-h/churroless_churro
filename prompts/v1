@@ -1,0 +1,48 @@
+Transcribe the entirety of this historical document to XML format.
+Ensure that the transcription captures all textual elements accurately and correctly isolates lines.
+Also, when musical features are present, please transcribe them using the MEI format, \
+ensuring that all musical notations are accurately represented.
+For the lines of text sitting below each score line, please link indicate under which score line they are sitting, \
+as there could be multiple lines of text under each score line.
+For stanzas with musical notation, the output should be of type
+```xml
+<MusicalNotation>
+    <score>
+        <measure n="1" xml:id="d1e139">
+            <staff n="1">
+                <layer n="1">
+                    <note xml:id="d1e141" pname="d" oct="5" dur="4" stem.dir="down"/>
+                    <note xml:id="d1e155" pname="d" oct="5" dur="8" stem.dir="down"/>
+                    <note xml:id="d1e169" pname="d" oct="5" dur="4" stem.dir="down"/>
+                    <note xml:id="d1e183" pname="d" oct="5" dur="8" stem.dir="down"/>
+                </layer>
+            </staff>
+        </measure>
+        <measure n="2" xml:id="d1e197">
+            <staff n="1">
+                <layer n="1">
+                    <note xml:id="d1e199" pname="d" oct="5" dur="4" dots="1" stem.dir="down"/>
+                    <note xml:id="d1e214" pname="b" oct="4" dur="4" stem.dir="down"/>
+                    <note xml:id="d1e228" pname="d" oct="5" dur="8" stem.dir="down"/>
+                </layer>
+            </staff>
+        </measure>
+    </score>
+</MusicalNotation>
+
+</Paragraph>
+    <Line measure="1">J'ay trouvé deux Amans tranſis</Line>
+    <Line measure"2">Qui diſputoient ſur leurs Philis.</Line>
+</Paragraph>
+```
+And for stanzas without musical notation :
+
+```xml
+  <Paragraph>
+    <Line measure"-1">Eſtre reſveur &amp; ſoupirer ſans ceſſe,</Line>
+    <Line measure"-1">>N'eſt pas bien mon talent :</Line>
+    <Line measure"-1">>Et quand il faut être dans la triſteſſe,</Line>
+    <Line measure"-1">>Je ſuis mauvais galant.</Line>
+  </Paragraph>
+```
+(the text and scores are indicative)
