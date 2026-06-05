@@ -4,6 +4,9 @@ outputs/
 examples/**/
 !examples/mini_ballard/
 
+.env*
+!.env_example
+
 
 
 # Byte-compiled / optimized / DLL files
