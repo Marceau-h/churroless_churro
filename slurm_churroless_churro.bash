@@ -1,7 +1,7 @@
 #!/bin/env bash
 
 #SBATCH --job-name=churroless_churro
-#SBATCH --output=churroless_churro_%j.out
+#SBATCH --output=runs/churroless_churro_%j.out
 #SBATCH --mail-type=ALL
 #SBATCH --partition=gpu
 #SBATCH --ntasks=1
@@ -31,18 +31,16 @@ set -e
 cd $CHURROLESS_REPO_PATH
 
 if [ ! -d ".venv" ]; then
-  uv init -p 3.12
   uv add --dev .
   uv venv
 fi
 
 source .venv/bin/activate
 
-llama-server --no-ui --parallel ${CHURROLESS_CONCURRENCY:-10}\
+llama-server --no-webui --parallel ${CHURROLESS_CONCURRENCY:-10}\
     -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:Q4_K_M'} &
 
-sleep 80
 
-uv run /scratch/hernandm/churro_tests/churroless_churro.py
+uv run churroless_churro.py
 
 exit 0
