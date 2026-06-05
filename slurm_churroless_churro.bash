@@ -1,7 +1,7 @@
 #!/bin/env bash
 
 #SBATCH --job-name=churroless_churro
-#SBATCH --output=churroless_churrol_%j.out
+#SBATCH --output=churroless_churro_%j.out
 #SBATCH --mail-type=ALL
 #SBATCH --partition=gpu
 #SBATCH --ntasks=1
@@ -23,16 +23,23 @@ set +e
 
 module load cuda/13.0
 module load cudnn/9.17/cuda13
-module load nvidia-hpc-sdk/25.11
+#module load nvidia-hpc-sdk/25.11
 module load python/3.12.10
 
 set -e
 
 cd $CHURROLESS_REPO_PATH
 
+if [ ! -d ".venv" ]; then
+  uv init -p 3.12
+  uv add --dev .
+  uv venv
+fi
+
 source .venv/bin/activate
 
-llama-server --no-ui --parallel ${CHURROLESS_CONCURRENCY:-10} -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:Q4_K_M'} &
+llama-server --no-ui --parallel ${CHURROLESS_CONCURRENCY:-10}\
+    -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:Q4_K_M'} &
 
 sleep 80
 
