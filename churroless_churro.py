@@ -89,7 +89,7 @@ class ImageFile:
     def open(self):
         return self.path.open("rb")
 
-    async def as_base64(self):
+    def as_base64(self):
         with self.open() as f:
             image_data = f.read()
             base64_data = base64.b64encode(image_data).decode("utf-8")
@@ -147,7 +147,7 @@ async def do_one_image(
                 "role": "user",
                 "content": [
                     {"type": "input_text", "text": prompt},
-                    {"type": "input_image", "image_url": (await file.as_base64())},
+                    {"type": "input_image", "image_url": file.as_base64()},
                 ],
             }
         ],
@@ -309,8 +309,8 @@ async def main(
             files=input_files,
             concurrency=concurrency,
     ):
-        with (output_dir / result_image.xml_name).open(mode="w", encoding="utf-8") as f: (
-            f.write(result_xml))
+        with (output_dir / result_image.xml_name).open(mode="w", encoding="utf-8") as f:
+            f.write(result_xml)
 
     later_now = datetime.now()
     later_now_pf = perf_counter_ns()
