@@ -334,7 +334,8 @@ async def main(
         "end_time": later_now.isoformat(),
         "time_spent_seconds": time_spent / 1e9,
 
-        "job_id": environ.get("SLURM_ARRAY_TASK_ID", "N/A"),
+        # "job_id": environ.get("SLURM_ARRAY_TASK_ID", "N/A"),
+        "job_id": environ.get("SLURM_JOB_ID", environ.get("SLURM_JOBID", "N/A")),
     }
 
 
