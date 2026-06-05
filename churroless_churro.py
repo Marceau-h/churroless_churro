@@ -206,13 +206,11 @@ def find_images(
         input_dir: Union[str, Path, None] = None,
         image_formats: Optional[List[Union[ImageFormat]]] = None,
         glob_prefix: Optional[str] = None,
-    ) -> Tuple[List[ImageFile], dict]:
-
+) -> Tuple[List[ImageFile], dict]:
     if input_dir is None:
         input_dir = environ.get("CHURROLESS_INPUT_DIR", "examples/mini_ballard")
     input_dir = Path(input_dir)
     assert input_dir.is_dir(), f"Input path {input_dir} is not a directory"
-
 
     if glob_prefix is None:
         glob_prefix = environ.get("CHURROLESS_GLOB_PREFIX", "")
@@ -266,7 +264,7 @@ async def main(
     assert isinstance(concurrency, int) and concurrency > 0, "Concurrency must be a positive integer"
 
     if host_url is None:
-        host_url = environ.get("CHURROLESS_HOST_URL", "http://localhost:5000")
+        host_url = environ.get("CHURROLESS_HOST_URL", "http://localhost:8080")
     assert isinstance(host_url, str) and host_url.startswith("http"), "Host URL must be a valid URL string"
 
     if api_key is None:
@@ -292,10 +290,10 @@ async def main(
     now = datetime.now()
     now_pf = perf_counter_ns()
 
-
     print(f"""\
     Starting with the following parameters:
     Model: {model}
+    Host URL: {host_url}
     Output directory: {output_dir}
     Concurrency: {concurrency}
     Number of files: {len(input_files)}
@@ -317,7 +315,6 @@ async def main(
     later_now = datetime.now()
     later_now_pf = perf_counter_ns()
     time_spent = (later_now_pf - now_pf)
-
 
     print(f"Finished at : {later_now.isoformat()}, took {time_spent / 1e9:.2f} seconds")
 
@@ -341,7 +338,6 @@ async def main(
     }
 
 
-
 if __name__ == "__main__":
     input_dir = Path("examples/mini_ballard")
     image_formats = [
@@ -355,7 +351,11 @@ if __name__ == "__main__":
 
     prompt = Path("prompts/v4").read_text(encoding="utf-8")
     model = None
-    output_dir = None
+    output_dir = (
+            Path.cwd()
+            / "outputs"
+            / f"churroless_output{environ.get("SLURM_ARRAY_TASK_ID", datetime.now().strftime('%Y%m%d_%H%M%S'))}"
+    )
     concurrency = None
     host_url = None
     api_key = None
