@@ -13,6 +13,8 @@ from tqdm.asyncio import tqdm
 
 from typing import Never
 
+JOB_ID = environ.get("SLURM_JOB_ID", environ.get("SLURM_JOBID", None))
+DATE = datetime.now().strftime('%Y%m%d_%H%M%S')
 
 def assert_never(arg: Never) -> Never:
     raise AssertionError("Expected code to be unreachable")
@@ -292,6 +294,7 @@ async def main(
 
     print(f"""\
     Starting with the following parameters:
+    Job ID: {JOB_ID or "N/A"}
     Model: {model}
     Host URL: {host_url}
     Output directory: {output_dir}
@@ -334,8 +337,7 @@ async def main(
         "end_time": later_now.isoformat(),
         "time_spent_seconds": time_spent / 1e9,
 
-        # "job_id": environ.get("SLURM_ARRAY_TASK_ID", "N/A"),
-        "job_id": environ.get("SLURM_JOB_ID", environ.get("SLURM_JOBID", "N/A")),
+        "job_id": JOB_ID or "N/A"
     }
 
 
@@ -355,7 +357,7 @@ if __name__ == "__main__":
     output_dir = (
             Path.cwd()
             / "outputs"
-            / f"churroless_output{environ.get("SLURM_ARRAY_TASK_ID", datetime.now().strftime('%Y%m%d_%H%M%S'))}"
+            / f"churroless_output_{f'job-{JOB_ID}' if JOB_ID is not None else f'date-{DATE}'}"
     )
     concurrency = None
     host_url = None
