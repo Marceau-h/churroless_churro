@@ -9,7 +9,7 @@ cd "$CHURROLESS_REPO_PATH"
 source .venv/bin/activate
 
 llama-server --parallel ${CHURROLESS_CONCURRENCY:-10} \
-    -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:Q4_K_M'} &
+    -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:IQ4_XS'} &
 
 uv run churroless_churro.py
 

@@ -37,8 +37,8 @@ fi
 
 source .venv/bin/activate
 
-llama-server --no-webui --parallel ${CHURROLESS_CONCURRENCY:-10}\
-    -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:Q4_K_M'} &
+llama-server --no-webui --parallel ${CHURROLESS_CONCURRENCY:-10} \
+    -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:Q8_0'} &
 
 
 uv run churroless_churro.py
