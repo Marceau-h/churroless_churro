@@ -248,10 +248,14 @@ async def main(
         api_key: Optional[str] = None,
 ) -> dict:
     if prompt is None:
-        prompt = environ.get(
-            "CHURROLESS_PROMPT",
-            "Transcribe the entirety of this historical document to XML format."
-        )
+        prompt_file = environ.get("CHURROLESS_PROMPT_FILE", None)
+        if prompt_file is not None:
+            prompt = Path(prompt_file).read_text(encoding="utf-8")
+        else:
+            prompt = environ.get(
+                "CHURROLESS_PROMPT",
+                "Transcribe the entirety of this historical document to XML format."
+            )
     assert isinstance(prompt, str), "Prompt must be a string"
 
     if model is None:
@@ -347,17 +351,18 @@ async def main(
 
 
 if __name__ == "__main__":
-    input_dir = Path("examples/mini_ballard")
-    image_formats = [
-        ImageFormat.png,
-        # ImageFormat.jpeg,
-        # ImageFormat.jpg,
-        # ImageFormat.webp,
-        # ImageFormat.gif,
-    ]
+    input_dir = None
+    # image_formats = [
+    #     ImageFormat.png,
+    #     ImageFormat.jpeg,
+    #     ImageFormat.jpg,
+    #     ImageFormat.webp,
+    #     ImageFormat.gif,
+    # ]
+    image_formats = None
     glob_prefix = ""
 
-    prompt = Path("prompts/v4").read_text(encoding="utf-8")
+    prompt = None
     model = None
     output_dir = (
             Path.cwd()
