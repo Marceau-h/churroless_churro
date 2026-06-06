@@ -6,10 +6,10 @@
 #SBATCH --partition=gpu
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=48G
-#SBATCH --gres=gpu:2
-#SBATCH --time=00-01:00:00
+#SBATCH --gres=gpu:1
+#SBATCH --time=00-02:00:00
 
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
@@ -40,11 +40,11 @@ source .venv/bin/activate
 
 export GGML_CUDA_P2P=1
 
+#    --split-mode tensor \
 llama-server \
     --no-ui \
-    --parallel ${CHURROLESS_CONCURRENCY:-10} \
-    --split-mode tensor \
-    -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:Q8_0'} \
+    --parallel $CHURROLESS_CONCURRENCY \
+    -hf $CHURROLESS_MODEL \
     > runs/llama-server_${JOB_ID}.log 2>&1 \
     &
 
