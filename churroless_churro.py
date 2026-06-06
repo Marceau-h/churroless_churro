@@ -13,7 +13,7 @@ from tqdm.asyncio import tqdm
 
 from typing import Never
 
-JOB_ID = environ.get("SLURM_JOB_ID", environ.get("SLURM_JOBID", None))
+JOB_ID = environ.get("JOB_ID", environ.get("SLURM_JOB_ID", environ.get("SLURM_JOBID", None)))
 DATE = datetime.now().strftime('%Y%m%d_%H%M%S')
 
 def assert_never(arg: Never) -> Never:
@@ -302,7 +302,12 @@ async def main(
     Number of files: {len(input_files)}
     Prompt: {prompt}
     
-    At : {now.isoformat()}  
+    At: {now.isoformat()}  
+    
+    IDs:
+        JOB_ID: {environ.get("JOB_ID")}
+        SLURM_JOB_ID: {environ.get("SLURM_JOB_ID")}
+        SLURM_JOBID: {environ.get("SLURM_JOBID")}
     """)
 
     async for result_xml, result_image in do_multiple_images(
