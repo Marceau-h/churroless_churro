@@ -23,7 +23,6 @@ set +e
 
 module load cuda/13.0
 module load cudnn/9.17/cuda13
-#module load nvidia-hpc-sdk/25.11
 module load python/3.12.10
 
 set -e
