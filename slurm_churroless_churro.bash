@@ -6,12 +6,13 @@
 #SBATCH --partition=gpu
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=32G
-#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem-per-cpu=48G
+#SBATCH --gres=gpu:2
 #SBATCH --time=00-01:00:00
 
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
+JOB_ID=${SLURM_JOB_ID:-${SLURM_JOBID:-$$}}
 
 set -xefaou pipefail
 
@@ -37,8 +38,15 @@ fi
 
 source .venv/bin/activate
 
-llama-server --no-webui --parallel ${CHURROLESS_CONCURRENCY:-10} \
-    -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:Q8_0'} &
+export GGML_CUDA_P2P=1
+
+llama-server \
+    --no-ui \
+    --parallel ${CHURROLESS_CONCURRENCY:-10} \
+    --split-mode tensor \
+    -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:Q8_0'} \
+    > runs/llama-server_${JOB_ID}.log 2>&1 \
+    &
 
 
 uv run churroless_churro.py
