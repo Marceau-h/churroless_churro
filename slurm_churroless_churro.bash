@@ -12,7 +12,6 @@
 #SBATCH --time=00-01:00:00
 
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
-JOB_ID=${SLURM_JOB_ID:-${SLURM_JOBID:-$$}}
 
 set -xefaou pipefail
 
@@ -28,6 +27,8 @@ module load cudnn/9.17/cuda13
 module load python/3.12.10
 
 set -e
+
+JOB_ID=${SLURM_JOB_ID:-${SLURM_JOBID:-$$}}
 
 cd $CHURROLESS_REPO_PATH
 
