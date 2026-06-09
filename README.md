@@ -1,5 +1,6 @@
 ## Usage sur SACADO
 
+- installer uv : https://docs.astral.sh/uv/getting-started/installation/
 - cloner le repo dans le scratch
 - uploader le build llama.cpp dans le scratch avec scp
 - uploader les images
@@ -8,7 +9,7 @@
 
 ```env
 PATH="/scratch/username/llama-cuda86-89-portable/bin:$PATH"
-LD_LIBRARY_PATH="/scratch/username/llama-cuda86-89-portable/lib:$LD_LIBRARY_PATH"
+LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/scratch/username/llama-cuda86-89-portable/lib"
 CHURROLESS_REPO_PATH="/scratch/username/churroless_churro"
 CHURROLESS_OUTPUT_DIR="$CHURROLESS_REPO_PATH/outputs"
 HF_HOME="$CHURROLESS_REPO_PATH/huggingface"
