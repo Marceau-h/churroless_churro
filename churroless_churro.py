@@ -224,6 +224,10 @@ def find_images(
     assert all(isinstance(fmt, ImageFormat) for fmt in image_formats), "All image formats must be valid ImageFormat values"
 
     patterns = [f"{glob_prefix}{fmt.glob_pattern()}" for fmt in image_formats]
+    # + rapide mais marche pas sur sacado (trop vieux glob?)
+    # globiboulga = f"{{{','.join(patterns)}}}" if len(patterns) > 1 else patterns[0]
+    # image_paths = list(input_dir.glob(globiboulga))
+    # files = [ImageFile(path) for path in image_paths]
 
     files = set()
     for pattern in patterns:
@@ -345,7 +349,8 @@ async def main(
         "time_spent": time_spent,
         "end_time": later_now.isoformat(),
         "time_spent_seconds": time_spent / 1e9,
-
+        "time_spent_per_page": time_spent / len(input_files),
+        "time_spent_per_page_seconds": (time_spent / 1e9) / len(input_files),
         "job_id": JOB_ID or "N/A"
     }
 
@@ -379,6 +384,7 @@ if __name__ == "__main__":
         glob_prefix=glob_prefix,
     )
 
+    # try:
     params_run = asyncio.run(
         main(
             prompt=prompt,
@@ -390,6 +396,10 @@ if __name__ == "__main__":
             api_key=api_key,
         )
     )
+    # except Exception as e:
+    #     print(params_find)
+    #     print(input_files)
+    #     raise e
 
     params = {
         **params_find,
