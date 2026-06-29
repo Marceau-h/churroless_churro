@@ -1,0 +1,63 @@
+Transcribe the entirety of this historical document to XML format.
+
+Ensure that the transcription captures all textual elements accurately and correctly isolates lines.
+
+Note that the document contains musical notation interspersed with the text.
+When two consecutive lines of text are separated by a line of musical notation, they should be treated as belonging to different verses as they will be associated with a bridge in the musical score (a repeated section of music that is sung twice (or more) with different lyrics each time).
+
+Hence, for stanzas with musical notation, where the structure is as follows:
+```pseudo_page_layout
+[MUSICAL NOTATION]
+[BIG CAP]A[END BIG CAP]Marillis, je renonce à vos
+Près de Philis, je verse moins de
+[MUSICAL NOTATION]
+char- mes, Vous me traitez avec
+lar- mes, Un seul ſoupir luy peut
+[MUSICAL NOTATION]
+rigueur,
+toucher le cœur :
+[ALIGNED WITH BOTH LINES BECAUSE END OF THE REPEATED SECTION]  Je ne cours
+[MUSICAL NOTATION]
+point toûjours à la plus ado-
+[MUSICAL NOTATION]
+ra- ble, La plus douce est pour moy
+```
+the XML transcription should be as follows:
+```xml
+<Paragraph>
+    <part number="1" mixed="true">
+        <Line><Initial type="simple"A</Initial>Marillis, je renonce à vos charmes,</Line>
+        <Line>Vous me traitez avec trop de rigueur,</Line>
+    </part>
+    <part number="2" mixed="true">
+        <Line>Près de Philis, je verse flots de larmes,</Line>
+        <Line>Un seul ſoupir luy peut toucher le cœur :</Line>
+    </part>
+    <part number="3">
+        <Line>Je ne cours point toûjours à la plus adorable,</Line>
+        <Line>La plus douce est pour moy</Line>
+    </part>
+</Paragraph>
+```
+
+
+And for stanzas without musical notation, when the structure is as follows:
+```pseudo_page_layout
+Aidez-moy donc Climene,
+A me défaire de mon amour,
+Ou ſoûlagez la peine
+Que pour vous je ſouffre nuit & jour.
+Plût aux dieux, pour le bonheur de tous,
+Que mon cœur fût tranquille comme vous.
+```
+the XML transcription should be as follows:
+```xml
+<Paragraph>
+    <Line>Aidez-moy donc Climene,</Line>
+    <Line>A me défaire de mon amour,</Line>
+    <Line>Ou ſoûlagez la peine</Line>
+    <Line>Que pour vous je ſouffre nuit &amp; jour.</Line>
+    <Line>Plût aux dieux, pour le bonheur de tous,</Line>
+    <Line>Que mon cœur fût tranquille comme vous.</Line>
+</Paragraph>
+```

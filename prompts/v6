@@ -1,0 +1,8 @@
+Transcribe the entirety of this historical document to XML format.
+
+Ensure that the transcription captures all textual elements accurately and correctly isolates lines.
+
+Note that the document contains musical notation interspersed with the text.
+When two consecutive lines of text are separated by a line of musical notation, they should be treated as belonging to different verses as they will be associated with a bridge in the musical score (a repeated section of music that is sung twice (or more) with different lyrics each time).
+
+DO NOT try to transcribe any musical notation (staves, notes, etc.) ONLY transcribe the text and ensure the line separation.
