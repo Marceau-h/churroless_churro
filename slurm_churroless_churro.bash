@@ -9,13 +9,48 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=48G
 #SBATCH --gres=gpu:1
-#SBATCH --time=00-02:00:00
+#SBATCH --time=00-04:00:00
 
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 
 set -xefaou pipefail
 
 source .env
+set +eu
+TEMP_ARGS=("$@")
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -c|--concurrency)
+      if [[ -n "$2" ]]; then
+        CHURROLESS_CONCURRENCY="$2"
+        shift 2
+      else
+        shift 1
+      fi
+      ;;
+    --concurrency=*)
+      CHURROLESS_CONCURRENCY="${1#*=}"
+      shift 1
+      ;;
+    -m|--model)
+      if [[ -n "$2" ]]; then
+        CHURROLESS_MODEL="$2"
+        shift 2
+      else
+        shift 1
+      fi
+      ;;
+    --model=*)
+      CHURROLESS_MODEL="${1#*=}"
+      shift 1
+      ;;
+    *)
+      shift 1
+      ;;
+  esac
+done
+set -eu
+set -- "${TEMP_ARGS[@]}"
 
 module purge
 
@@ -49,6 +84,6 @@ llama-server \
     &
 
 
-uv run churroless_churro.py
+uv run churroless_churro.py "$@"
 
 exit 0
