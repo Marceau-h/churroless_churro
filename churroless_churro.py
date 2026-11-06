@@ -356,51 +356,132 @@ async def main(
 
 
 if __name__ == "__main__":
-    input_dir = None
-    # image_formats = [
-    #     ImageFormat.png,
-    #     ImageFormat.jpeg,
-    #     ImageFormat.jpg,
-    #     ImageFormat.webp,
-    #     ImageFormat.gif,
-    # ]
-    image_formats = None
-    glob_prefix = ""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Run VLM models for Automatic Text Recognition (ATR) tasks."
+    )
+    parser.add_argument(
+        "--input-dir", "-i",
+        default=environ.get("CHURROLESS_INPUT_DIR", "examples/mini_ballard"),
+        help="Directory containing input images (default: CHURROLESS_INPUT_DIR or 'examples/mini_ballard')"
+    )
+    parser.add_argument(
+        "--output-dir", "-o",
+        default=None,
+        help="Directory to save output XMLs (default: CHURROLESS_OUTPUT_DIR or a job/date specific directory)"
+    )
+    parser.add_argument(
+        "--glob-prefix", "-g",
+        default=environ.get("CHURROLESS_GLOB_PREFIX", ""),
+        help="Prefix glob pattern for filtering images (default: CHURROLESS_GLOB_PREFIX or '')"
+    )
+    parser.add_argument(
+        "--image-formats",
+        default=environ.get("CHURROLESS_IMAGE_FORMATS", "png"),
+        help="Comma-separated image formats to process, e.g. png,jpg (default: CHURROLESS_IMAGE_FORMATS or 'png')"
+    )
+    parser.add_argument(
+        "--prompt", "-p",
+        default=None,
+        help="Prompt text for transcription (default: CHURROLESS_PROMPT environment variable)"
+    )
+    parser.add_argument(
+        "--prompt-file", "-f",
+        default=None,
+        help="Path to a file containing the prompt (default: CHURROLESS_PROMPT_FILE environment variable)"
+    )
+    parser.add_argument(
+        "--model", "-m",
+        default=environ.get("CHURROLESS_MODEL", "mradermacher/churro-3B-GGUF:Q4_K_M"),
+        help="Model name or identifier (default: CHURROLESS_MODEL or 'mradermacher/churro-3B-GGUF:Q4_K_M')"
+    )
+    
+    env_concurrency = environ.get("CHURROLESS_CONCURRENCY", "")
+    default_concurrency = int(env_concurrency) if env_concurrency.isdigit() else 5
+    parser.add_argument(
+        "--concurrency", "-c",
+        type=int,
+        default=default_concurrency,
+        help=f"Number of concurrent image requests (default: CHURROLESS_CONCURRENCY or {default_concurrency})"
+    )
+    parser.add_argument(
+        "--host-url", "-u",
+        default=environ.get("CHURROLESS_HOST_URL", "http://localhost:8080"),
+        help="VLM server host URL (default: CHURROLESS_HOST_URL or 'http://localhost:8080')"
+    )
+    parser.add_argument(
+        "--api-key", "--key", "-k",
+        default=environ.get("CHURROLESS_KEY", "dummy"),
+        help="API key for the server (default: CHURROLESS_KEY or 'dummy')"
+    )
+
+    args = parser.parse_args()
+
+    # Parse image formats
+    image_formats = [
+        ImageFormat(fmt.strip()) for fmt in args.image_formats.split(",") if fmt.strip()
+    ]
+
+    # Resolve output directory
+    output_dir = args.output_dir
+    if output_dir is None:
+        base_out = environ.get("CHURROLESS_OUTPUT_DIR")
+        if base_out:
+            base_out = Path(base_out)
+        else:
+            base_out = Path.cwd() / "outputs"
+            
+        suffix = f"churroless_output_{f'job-{JOB_ID}' if JOB_ID is not None else f'date-{DATE}'}"
+        output_dir = base_out / suffix
+    else:
+        output_dir = Path(output_dir)
+
+    # Resolve prompt
+    import sys
 
     prompt = None
-    model = None
-    output_dir = (
-            Path.cwd()
-            / "outputs"
-            / f"churroless_output_{f'job-{JOB_ID}' if JOB_ID is not None else f'date-{DATE}'}"
-    )
-    concurrency = None
-    host_url = None
-    api_key = None
+    if args.prompt_file is not None:
+        prompt = Path(args.prompt_file).read_text(encoding="utf-8")
+    elif args.prompt is not None:
+        prompt = args.prompt
+    elif not sys.stdin.isatty():
+        piped_prompt = sys.stdin.read().strip()
+        if piped_prompt:
+            prompt = piped_prompt
 
+    if prompt is None:
+        # Fallback to env prompt file or prompt string
+        env_prompt_file = environ.get("CHURROLESS_PROMPT_FILE", None)
+        if env_prompt_file is not None:
+            prompt = Path(env_prompt_file).read_text(encoding="utf-8")
+        else:
+            prompt = environ.get(
+                "CHURROLESS_PROMPT",
+                "Transcribe the entirety of this historical document to XML format."
+            )
+
+    # Find the images to process
     input_files, params_find = find_images(
-        input_dir=input_dir,
+        input_dir=args.input_dir,
         image_formats=image_formats,
-        glob_prefix=glob_prefix,
+        glob_prefix=args.glob_prefix,
     )
 
-    # try:
+    # Run the main ATR loop
     params_run = asyncio.run(
         main(
             prompt=prompt,
-            model=model,
+            model=args.model,
             input_files=input_files,
             output_dir=output_dir,
-            concurrency=concurrency,
-            host_url=host_url,
-            api_key=api_key,
+            concurrency=args.concurrency,
+            host_url=args.host_url,
+            api_key=args.api_key,
         )
     )
-    # except Exception as e:
-    #     print(params_find)
-    #     print(input_files)
-    #     raise e
 
+    # Save output parameters
     params = {
         **params_find,
         **params_run,
@@ -410,3 +491,4 @@ if __name__ == "__main__":
 
     with (output_dir / "params.json").open(mode="w", encoding="utf-8") as f:
         json.dump(params, f, indent=4, ensure_ascii=False)
+
