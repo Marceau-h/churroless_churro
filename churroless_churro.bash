@@ -44,7 +44,9 @@ cd "$CHURROLESS_REPO_PATH"
 
 source .venv/bin/activate
 
-llama-server --parallel ${CHURROLESS_CONCURRENCY:-10} \
+llama-server \
+    --port 9931 \
+    --parallel ${CHURROLESS_CONCURRENCY:-10} \
     -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:IQ4_XS'} &
 LLAMA_PID=$!
 

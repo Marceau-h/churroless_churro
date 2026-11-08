@@ -77,6 +77,7 @@ export GGML_CUDA_P2P=1
 
 #    --split-mode tensor \
 llama-server \
+    --port 9931 \
     --no-ui \
     --parallel $CHURROLESS_CONCURRENCY \
     -hf $CHURROLESS_MODEL \
