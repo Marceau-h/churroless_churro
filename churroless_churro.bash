@@ -48,6 +48,7 @@ llama-server \
     --port 9931 \
     --parallel ${CHURROLESS_CONCURRENCY:-10} \
     -hf ${CHURROLESS_MODEL:-'mradermacher/churro-3B-GGUF:IQ4_XS'} &
+
 LLAMA_PID=$!
 
 trap 'kill "$LLAMA_PID" 2>/dev/null || true' EXIT

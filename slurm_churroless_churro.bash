@@ -84,6 +84,10 @@ llama-server \
     > runs/llama-server_${JOB_ID}.log 2>&1 \
     &
 
+LLAMA_PID=$!
+
+trap 'kill "$LLAMA_PID" 2>/dev/null || true' EXIT
+
 
 uv run churroless_churro.py "$@"
 
