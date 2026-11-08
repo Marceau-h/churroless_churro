@@ -1,31 +1,4 @@
-## Usage sur SACADO
-
-- installer uv : https://docs.astral.sh/uv/getting-started/installation/
-- cloner le repo dans le scratch
-- uploader le build llama.cpp dans le scratch avec scp
-- uploader les images
-- configurer les variables d'env dans le fichier .env pour préciser l'endroit où sont le repo, le llama.cpp, les images, le dossier de sortie
-- exemple de fichier de conf:
-
-```env
-PATH="/scratch/username/llama-cuda86-89-portable/bin:$PATH"
-CHURROLESS_REPO_PATH="/scratch/username/churroless_churro"
-CHURROLESS_OUTPUT_DIR="$CHURROLESS_REPO_PATH/outputs"
-HF_HOME="$CHURROLESS_REPO_PATH/huggingface"
-
-CHURROLESS_INPUT_DIR="$CHURROLESS_REPO_PATH/examples/mini_ballard"
-CHURROLESS_IMAGE_FORMATS="jpg,png"
-CHURROLESS_CONCURRENCY=20
-
-CHURROLESS_KEY="dummy"
-CHURROLESS_HOST_URL="http://127.0.0.1:8080"
-
-CHURROLESS_MODEL="mradermacher/churro-3B-GGUF:Q8_0"
-```
-- lancer sbatch slurm_churroless_churro.bash
-
-
- ## Walkthrough HPC
+## Usage sur HPC (SACADO ou autre)
 
 ### Installation
 #### uv
@@ -42,9 +15,8 @@ cd churroless_churro
 
 #### Télécharger le build llama.cpp
 ```console
-cd /scratch/$USER
 wget https://github.com/Marceau-h/llama_special_build/releases/download/v0.1.0/llama-tailored-static.tar.gz
-tar -xzf llama-tailored-static.tar.gz
+tar -xzf llama-tailored-static.tar.gz -C /scratch/$USER/llama-tailored-static
 ```
 
 #### Uploader vos images
@@ -59,6 +31,12 @@ Il y a un fichier d'exemple appelé `.env_example` dans le repo. Il faut le copi
 Les deux variables les plus à modifier sont :
 - `CHURROLESS_INPUT_DIR` : le chemin vers le dossier contenant vos images à traiter (le chemin que vous avez mis à la place de `/distant/path/to/images/` dans la commande précédente)
 - `CHURROLESS_IMAGE_FORMATS` : les formats d'images que vous voulez traiter, séparés par une virgule (`jpg,png` par défaut)
+
+```console
+cd /scratch/$USER/churroless_churro
+cp .env_example .env
+nano .env # modifier les variables d'environnement
+```
 
 ### Utilisation
 Pour lancer le traitement, il suffit d'aller dans le dossier du repo et de lancer le script `slurm_churroless_churro.bash` avec la commande `sbatch` :
