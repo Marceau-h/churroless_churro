@@ -1,5 +1,8 @@
 ## Usage sur HPC (SACADO ou autre)
-
+Attention : L'ensemble des chemins sont pensés pour un usage sur SACADO, le dossier `/scratch/$USER` y est présent mais ce n'est peut-être pas le cas sur d'autres HPC. Il faudra donc adapter les chemins en conséquence.
+Nous vous conseillons de créer un dossier `/scratch/$USER` sur le SACADO pour y mettre le repo, mais pas les images à traiter qui devraient optimalement être mises dans la partition store (/store/$USER).
+Pour plus d'informations sur l'utilisation de SACADO, vous pouvez consulter la documentation officielle.
+Aussi veillez à récupérer vos transcriptions car le dossier `/scratch/$USER` peut être nettoyé automatiquement.
 ### Installation
 #### uv
 ````console
@@ -10,13 +13,14 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ```console
 cd /scratch/$USER
 git clone https://github.com/Marceau-h/churroless_churro.git
-cd churroless_churro
 ```
 
 #### Télécharger le build llama.cpp
 ```console
 wget https://github.com/Marceau-h/llama_special_build/releases/download/v0.1.0/llama-tailored-static.tar.gz
+mkdir /scratch/$USER/llama-tailored-static
 tar -xzf llama-tailored-static.tar.gz -C /scratch/$USER/llama-tailored-static
+rm llama-tailored-static.tar.gz
 ```
 
 #### Uploader vos images
