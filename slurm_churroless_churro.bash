@@ -67,11 +67,11 @@ JOB_ID=${SLURM_JOB_ID:-${SLURM_JOBID:-$$}}
 cd $CHURROLESS_REPO_PATH
 
 if [ ! -d ".venv" ]; then
-  uv add --dev .
-  uv venv
+    uv venv
+    uv add --dev .
 fi
 
-source .venv/bin/activate
+uv sync
 
 export GGML_CUDA_P2P=1
 
