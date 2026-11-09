@@ -25,7 +25,7 @@ rm -f llama-tailored-static.tar.gz
 
 #### Uploader vos images
 ```console
-rsync -avz /local/path/to/images/ $USER@sacado:/distant/path/to/images/
+rsync -avz /local/path/to/images/ $USER@login.mesu.sorbonne-universite.fr:/distant/path/to/images/
 ```
 
 ### Configuration
