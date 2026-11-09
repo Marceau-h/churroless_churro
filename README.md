@@ -20,7 +20,7 @@ git clone https://github.com/Marceau-h/churroless_churro.git
 wget https://github.com/Marceau-h/llama_special_build/releases/download/v0.1.0/llama-tailored-static.tar.gz
 mkdir /scratch/$USER/llama-tailored-static
 tar -xzf llama-tailored-static.tar.gz -C /scratch/$USER/llama-tailored-static
-rm llama-tailored-static.tar.gz
+rm -f llama-tailored-static.tar.gz
 ```
 
 #### Uploader vos images
