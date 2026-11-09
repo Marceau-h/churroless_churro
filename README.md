@@ -53,7 +53,7 @@ Les images seront traitées et les résultats seront sauvegardés dans le dossie
 
 Vous pouvez également surveiller l'avancement du traitement:
 - vous pouvez voir tous vos jobs en cours avec la commande `squeue -u $USER` (ou `myqueue` sur SACADO), vous y verrez le nom, le temps d'exécution, l'état et l'ID du job. À noter que le temps d'exécution peut rester à 0 pendant un certain temps, l'état du job vous indiquera alors la raison de l'attente, veuillez alors consulter la documentation de SACADO ou de slurm pour plus d'informations.
-- les logs du script sont dans le fichier `runs/churroless_churro_%j.out`, où `%j` est remplacé par l'ID du job que vous voyez dans la sortie de la commande `sbatch` ou dans la commande `squeue -u $USER. Vous pouvez donc consulter le fichier de log avec la commande ` cat runs/churroless_churro_<job_id>.out` ou `tail -f runs/churroless_churro_<job_id>.out` pour suivre l'avancement en temps réel.
+- les logs du script sont dans le fichier `runs/churroless_churro_%j.out`, où `%j` est remplacé par l'ID du job que vous voyez dans la sortie de la commande `sbatch` ou dans la commande `squeue -u $USER`. Vous pouvez donc consulter le fichier de log avec la commande `cat runs/churroless_churro_<job_id>.out` ou `tail -f runs/churroless_churro_<job_id>.out` pour suivre l'avancement en temps réel.
 - vous pouvez également regarder les transcriptions générées dans le dossier `outputs` du repo, elles seront nommées avec le nom de l'image d'origine et l'extension `.xml`.
 - pour finir, les logs du serveur llama sont dans le fichier `runs/llama_server_%j.out`, où `%j` est remplacé par l'ID du job 
 
